@@ -384,6 +384,24 @@ const windowIsDefined = (typeof window === "object");
 				this.options[optName] = val;
 			}
 
+			/* In case ticks are specified, overwrite default min and max bounds */
+			if (Array.isArray(this.options.ticks) && this.options.ticks.length > 0) {
+				if (this.options.max === null) {
+					this.options.max = Math.max.apply(Math, this.options.ticks);
+				}
+				if (this.options.min === null) {
+					this.options.min = Math.min.apply(Math, this.options.ticks);
+				}
+			}
+
+			/* Default min=0 and max=10 */
+			if (this.options.max === null) {
+				this.options.max = 10;
+			}
+			if (this.options.min === null) {
+				this.options.max = 0;
+			}
+
 			// Check options.rtl
 			if(this.options.rtl==='auto'){
 				this.options.rtl = window.getComputedStyle(this.element).direction==='rtl';
@@ -680,11 +698,6 @@ const windowIsDefined = (typeof window === "object");
 				this._addClass(this.sliderElem, 'slider-rtl');
 			}
 			this._setTooltipPosition();
-			/* In case ticks are specified, overwrite the min and max bounds */
-			if (Array.isArray(this.options.ticks) && this.options.ticks.length > 0) {
-					this.options.max = Math.max.apply(Math, this.options.ticks);
-					this.options.min = Math.min.apply(Math, this.options.ticks);
-			}
 
 			if (Array.isArray(this.options.value)) {
 				this.options.range = true;
@@ -848,8 +861,8 @@ const windowIsDefined = (typeof window === "object");
 
 			defaultOptions: {
 				id: "",
-				min: 0,
-				max: 10,
+				min: null,  // will default to 0
+				max: null,  // will default to 10
 				step: 1,
 				precision: 0,
 				orientation: 'horizontal',
